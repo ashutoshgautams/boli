@@ -1,26 +1,419 @@
 @import "tailwindcss";
 
+/* =========================
+   Warm Elegant Theme
+   ========================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary - Dark Olive Green Palette */
+  --primary-50: #f7f8f5;
+  --primary-100: #eef2e8;
+  --primary-200: #dde5d1;
+  --primary-300: #c3d4b0;
+  --primary-400: #a3bc88;
+  --primary-500: #6b8e4e; /* Main olive green */
+  --primary-600: #556b2f; /* Dark olive green */
+  --primary-700: #45562a;
+  --primary-800: #384623;
+  --primary-900: #2d3a1c;
+
+  /* Warm neutrals - Stained paper palette (kept from original) */
+  --warm-white: #fffcf7;
+  --warm-50: #faf6f0;
+  --warm-100: #f5f1e8;
+  --warm-200: #ede8dc;
+  --warm-300: #e3dccf;
+  --warm-400: #d1c7b7;
+  --warm-500: #a89f8f;
+  --warm-600: #8a8173;
+  --warm-700: #6b6459;
+  --warm-800: #4a4640;
+  --warm-900: #2d2925;
+
+  /* Semantic colors */
+  --text-primary: #2d2925;
+  --text-secondary: #6b6459;
+  --text-tertiary: #8a8173;
+
+  /* Surface colors */
+  --background: #faf6f0;
+  --surface: #fffcf7;
+  --surface-elevated: #ffffff;
+  --border: rgba(107, 100, 89, 0.12);
+  --border-hover: rgba(107, 100, 89, 0.2);
+
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Shadows - Warm tinted */
+  --shadow-sm: 0 1px 3px rgba(45, 41, 37, 0.08), 0 1px 2px rgba(45, 41, 37, 0.06);
+  --shadow-md: 0 4px 12px rgba(45, 41, 37, 0.1), 0 2px 6px rgba(45, 41, 37, 0.06);
+  --shadow-lg: 0 12px 24px rgba(45, 41, 37, 0.12), 0 4px 12px rgba(45, 41, 37, 0.08);
+  --shadow-xl: 0 24px 48px rgba(45, 41, 37, 0.15), 0 8px 16px rgba(45, 41, 37, 0.1);
+
+  /* Border radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
 }
+
+/* =========================
+   Tailwind Theme Extensions
+   ========================= */
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground: var(--text-primary);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+
+  --color-primary-*: initial;
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+
+  --color-warm-*: initial;
+  --color-warm-50: var(--warm-50);
+  --color-warm-100: var(--warm-100);
+  --color-warm-200: var(--warm-200);
+  --color-warm-300: var(--warm-300);
+  --color-warm-400: var(--warm-400);
+  --color-warm-500: var(--warm-500);
+  --color-warm-600: var(--warm-600);
+  --color-warm-700: var(--warm-700);
+  --color-warm-800: var(--warm-800);
+  --color-warm-900: var(--warm-900);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =========================
+   Base Styles
+   ========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   Typography - Sleeker with Reduced Weights
+   ========================= */
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 600; /* Reduced from 700 */
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700; /* Reduced from 800 */
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600; /* Reduced from 700 */
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 500; /* Reduced from 600 */
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 500; /* Reduced from 600 */
+}
+
+p {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   Scrollbar
+   ========================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--warm-300);
+  border-radius: 5px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--warm-400);
+}
+
+/* =========================
+   Selection
+   ========================= */
+
+::selection {
+  background: var(--primary-100);
+  color: var(--primary-800);
+}
+
+/* =========================
+   Focus States
+   ========================= */
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* =========================
+   Auth Components
+   ========================= */
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--background);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  padding: 3rem 2.5rem;
+  position: relative;
+}
+
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+
+.auth-input {
+  width: 100%;
+  height: 56px;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.auth-input::placeholder {
+  color: var(--warm-500);
+}
+
+.auth-input:hover:not(:disabled) {
+  border-color: var(--border-hover);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--primary-100);
+  transform: translateY(-2px);
+}
+
+.auth-button {
+  width: 100%;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+  box-shadow: 0 4px 12px rgba(107, 142, 78, 0.25);
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(107, 142, 78, 0.35);
+}
+
+.auth-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-link {
+  color: var(--primary-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.auth-link:hover {
+  color: var(--primary-700);
+}
+
+.social-button {
+  width: 100%;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.social-button:hover:not(:disabled) {
+  background: var(--warm-50);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =========================
+   Marquee Animations - Enterprise Grade
+   ========================= */
+
+@keyframes marquee-ltr {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Slow animation - 60 seconds for smooth, enterprise feel */
+.animate-marquee-slow {
+  animation: marquee-ltr 60s linear infinite;
+  will-change: transform;
+}
+
+/* Slower reverse animation - 80 seconds for variety */
+.animate-marquee-slower-reverse {
+  animation: marquee-rtl 80s linear infinite;
+  will-change: transform;
+}
+
+/* Medium speed for company logos - 40 seconds */
+.animate-marquee-medium {
+  animation: marquee-ltr 40s linear infinite;
+  will-change: transform;
+}
+
+/* Pause animations on hover for better UX */
+.animate-marquee-slow:hover,
+.animate-marquee-slower-reverse:hover,
+.animate-marquee-medium:hover {
+  animation-play-state: paused;
+}
+
+/* =========================
+   Reduced Motion
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
