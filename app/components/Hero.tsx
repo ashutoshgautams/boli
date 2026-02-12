@@ -18,33 +18,33 @@ export default function Hero() {
 
       tl.from(badgeRef.current, {
         y: 20,
-        opacity: 0,
+        // opacity: 0,
         duration: 0.6,
       })
         .from(headlineRef.current, {
           y: 30,
-          opacity: 0,
+          // opacity: 0,
           duration: 0.7,
         }, '-=0.4')
         .from(subtitleRef.current, {
           y: 20,
-          opacity: 0,
+          // opacity: 0,
           duration: 0.6,
         }, '-=0.5')
         .from([cta1Ref.current, cta2Ref.current], {
           y: 20,
-          opacity: 0,
+          // opacity: 0,
           stagger: 0.15,
           duration: 0.5,
         }, '-=0.4')
         .from(imageRef.current, {
           x: 50,
-          opacity: 0,
+          // opacity: 0,
           duration: 0.8,
         }, '-=0.6')
         .from('.stat-card', {
           scale: 0.8,
-          opacity: 0,
+          // opacity: 0,
           stagger: 0.1,
           duration: 0.5,
         }, '-=0.4');
