@@ -92,11 +92,11 @@ export default function LearningMaterialsPage() {
             <span className="text-sm font-medium text-primary-700">Free Resources</span>
           </div>
           
-          <h1 className="text-5xl lg:text-6xl font-bold text-primary-900 mb-6">
+          <h2 className="text-2xl lg:text-3xl font-bold text-primary-900 mb-6">
             Comprehensive Learning Materials
-          </h1>
+          </h2>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Download PDFs, worksheets, audio files, and templates to support your English learning journey. All materials available offline.
           </p>
           
@@ -232,8 +232,8 @@ export default function LearningMaterialsPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Get Instant Access to All Materials
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
-            Start downloading and studying today — completely free
+          <p className="text-xl text-warm-600 mb-8 pb-6">
+            Start downloading and studying today - completely free
           </p>
           <Link
             href="/signup"

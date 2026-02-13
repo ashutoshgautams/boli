@@ -125,7 +125,7 @@ export default function OneOnOneCoachingPage() {
       <section className="relative py-20 px-4 bg-gradient-to-br from-warm-50 via-white to-warm-100">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 border border-primary-200 rounded-full mb-6">
-            <Star className="w-4 h-4 text-primary-700 fill-primary-700" />
+            {/* <Star className="w-4 h-4 text-primary-700 fill-primary-700" /> */}
             <span className="text-sm font-medium text-primary-700">4.9★ Average Rating</span>
           </div>
           
@@ -133,7 +133,7 @@ export default function OneOnOneCoachingPage() {
             Personal English Coaching
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Get personalized attention from expert tutors. Achieve your goals faster with one-on-one coaching tailored to your needs.
           </p>
           
@@ -365,7 +365,7 @@ export default function OneOnOneCoachingPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Ready to Start Your Journey?
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
+          <p className="text-xl text-warm-600 mb-8 pb-6">
             Book your first 1:1 coaching session today
           </p>
           <Link

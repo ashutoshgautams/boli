@@ -130,7 +130,7 @@ export default function GroupCoachingPage() {
             Group Coaching Classes
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-xl text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Learn English in interactive 1:15 group sessions. Get expert coaching, practice with peers, and achieve your goals together.
           </p>
           
@@ -399,7 +399,7 @@ export default function GroupCoachingPage() {
         </div>
       </section>
 
-      {/* Pricing Comparison */}
+      {/* Pricing Comparison
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-12">
@@ -432,7 +432,7 @@ export default function GroupCoachingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA */}
       <section className="py-20 bg-warm-50">
@@ -440,7 +440,7 @@ export default function GroupCoachingPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Ready to Join a Group?
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
+          <p className="text-xl text-warm-600 mb-8 pb-6">
             Start learning with expert coaches and motivated peers
           </p>
           <Link

@@ -17,7 +17,7 @@ export default function InterviewPrepPage() {
     },
     {
       icon: <Target className="w-6 h-6" />,
-      title: 'Company-Specific Prep',
+      title: 'Company-wise Prep',
       description: 'Tailored preparation for top companies like Google, Amazon, Microsoft, and more'
     },
     {
@@ -97,7 +97,7 @@ export default function InterviewPrepPage() {
             Ace Your Next Interview
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-xl text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Master interview English with expert coaching, realistic mock interviews, and personalized feedback. Land your dream job with confidence.
           </p>
           
@@ -285,7 +285,7 @@ export default function InterviewPrepPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Ready to Ace Your Interview?
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
+          <p className="text-xl text-warm-600 mb-8 pb-6">
             Book your first mock interview today and get expert feedback
           </p>
           <Link
