@@ -252,7 +252,7 @@ export default function Header() {
               href="/signup"
               className="nav-item px-4 py-2 bg-primary-600 text-white text-[14px] font-semibold rounded-lg hover:bg-primary-700 transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
             >
-              Start today - it&apos;s free
+              Start now - it&apos;s free
             </Link>
           </div>
 

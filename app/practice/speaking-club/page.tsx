@@ -85,7 +85,7 @@ export default function SpeakingClubPage() {
             Practice English Every Day
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-xl text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Join live speaking clubs with learners from across India. Build fluency through real conversations on topics you care about.
           </p>
           
@@ -328,8 +328,8 @@ export default function SpeakingClubPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Start Practicing Today
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
-            Join your first speaking club session — completely free
+          <p className="text-xl text-warm-600 mb-8 pb-6">
+            Join your first speaking club session - completely free
           </p>
           <Link
             href="/signup"

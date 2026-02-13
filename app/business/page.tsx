@@ -7,7 +7,7 @@ export default function BusinessPage() {
   const benefits = [
     {
       icon: <TrendingUp className="w-6 h-6" />,
-      title: 'Boost Team Performance',
+      title: 'Boost Performance',
       description: 'Improve communication efficiency and reduce misunderstandings in the workplace'
     },
     {
@@ -120,7 +120,7 @@ export default function BusinessPage() {
             English Training for Your Team
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-xl text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Empower your workforce with professional English skills. Customized corporate training programs that deliver measurable results.
           </p>
           
@@ -438,7 +438,7 @@ export default function BusinessPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Ready to Upskill Your Team?
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
+          <p className="text-xl text-warm-600 mb-8 pb-6">
             Join 500+ companies that trust Boli for corporate English training
           </p>
           <Link

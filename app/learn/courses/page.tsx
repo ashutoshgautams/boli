@@ -8,7 +8,7 @@ export default function CoursesPage() {
     {
       level: 'Beginner (A1-A2)',
       title: 'English Foundations',
-      description: 'Start your English journey with basic grammar, vocabulary, and everyday conversations.',
+      description: 'Start your English journey with basic grammar and everyday conversations.',
       duration: '8 weeks',
       lessons: 40,
       features: [
@@ -57,7 +57,7 @@ export default function CoursesPage() {
     },
     {
       icon: <BookOpen className="w-6 h-6" />,
-      title: 'Downloadable Materials',
+      title: 'Download Materials',
       description: 'PDFs, worksheets, and practice exercises you can study offline'
     },
     {
@@ -83,11 +83,11 @@ export default function CoursesPage() {
             <span className="text-sm font-medium text-primary-700">Self-Paced Learning</span>
           </div>
           
-          <h1 className="text-5xl lg:text-6xl font-bold text-primary-900 mb-6">
+          <h1 className="text-5xl lg:text-6xl font-bold text-primary-900 mb-6 pb-3">
             Master English at Your Own Pace
           </h1>
           
-          <p className="text-xl text-warm-600 mb-8 max-w-2xl mx-auto">
+          <p className="inline-flex items-center text-xl text-warm-600 mb-8 max-w-2xl mx-auto pb-6">
             Structured curriculum from A1 to C2 level. Learn with expert teachers through HD video lessons and interactive exercises.
           </p>
           
@@ -197,7 +197,7 @@ export default function CoursesPage() {
           <h2 className="text-4xl font-bold text-primary-900 mb-4">
             Ready to Start Learning?
           </h2>
-          <p className="text-xl text-warm-600 mb-8">
+          <p className="text-xl text-warm-600 mb-8 pb-6">
             Join thousands of learners improving their English every day
           </p>
           <Link
