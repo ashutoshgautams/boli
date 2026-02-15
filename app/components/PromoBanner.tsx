@@ -17,10 +17,8 @@ export default function PromoBanner() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true);
 
-    // Check dismissal status
     const dismissed = localStorage.getItem('maha-sale-banner-dismissed');
     if (dismissed) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsDismissed(true);
       return;
     }
@@ -55,46 +53,48 @@ export default function PromoBanner() {
 
   return (
     <div className="relative bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white">
-      <div className="max-w-[112rem] mx-auto px-8 sm:px-12 lg:px-16 py-5">
-        <div className="flex items-center justify-between gap-8">
-          <div className="flex-1 flex items-center justify-center gap-8 text-base">
-            <span className="font-medium tracking-tight">
+      <div className="max-w-[112rem] mx-auto px-4 sm:px-8 lg:px-16 py-3 sm:py-5">
+        <div className="flex items-center justify-between gap-3 sm:gap-8">
+          {/* Main content - wraps on mobile */}
+          <div className="flex-1 flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-8 text-sm sm:text-base">
+            <span className="font-medium tracking-tight whitespace-nowrap">
               🔱 Mahashivratri Special Sale
             </span>
 
             <span className="hidden sm:inline text-white/40">|</span>
 
-            <div className="hidden sm:flex items-center gap-1.5 text-lg font-light tracking-wide tabular-nums">
+            {/* Timer with seconds on all screen sizes */}
+            <div className="flex items-center gap-1 text-base sm:text-lg font-light tracking-wide tabular-nums">
               <span>{String(timeLeft.days).padStart(2, '0')}</span>
-              <span className="text-sm font-normal">d</span>
-              <span className="text-white/40 mx-0.5">:</span>
+              <span className="text-xs sm:text-sm font-normal">d</span>
+              <span className="text-white/40">:</span>
               <span>{String(timeLeft.hours).padStart(2, '0')}</span>
-              <span className="text-sm font-normal">h</span>
-              <span className="text-white/40 mx-0.5">:</span>
+              <span className="text-xs sm:text-sm font-normal">h</span>
+              <span className="text-white/40">:</span>
               <span>{String(timeLeft.minutes).padStart(2, '0')}</span>
-              <span className="text-sm font-normal">m</span>
-              <span className="text-white/40 mx-0.5">:</span>
+              <span className="text-xs sm:text-sm font-normal">m</span>
+              <span className="text-white/40">:</span>
               <span>{String(timeLeft.seconds).padStart(2, '0')}</span>
-              <span className="text-sm font-normal">s</span>
+              <span className="text-xs sm:text-sm font-normal">s</span>
             </div>
 
             <span className="hidden sm:inline text-white/40">|</span>
 
-            <span className="text-white/90 text-sm sm:text-base">
-              Limited Time Offer: Get It for FREE!
+            <span className="text-white/90 text-xs sm:text-base text-center sm:text-left">
+              Get It for FREE!
             </span>
           </div>
 
+          {/* Close button */}
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 p-2 hover:bg-white/10 rounded transition-colors"
+            className="flex-shrink-0 p-1.5 sm:p-2 hover:bg-white/10 rounded transition-colors"
             aria-label="Dismiss announcement"
           >
-            <X className="w-4 h-4 text-white/70 hover:text-white" />
+            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/70 hover:text-white" />
           </button>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,666 +1,338 @@
+/* eslint-disable react-hooks/purity */
 'use client';
 
-import { useState } from 'react';
-import { Play, CheckCircle2, Lock, Clock, Download, Award, ChevronDown, ChevronUp } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import BoliLogo from './../../../components/Bolilogo';
 
-type LessonContent = {
-  summary: string;
-  keyPoints: string[];
-  transcript: string;
-  downloadableResources: { name: string; size: string }[];
-};
+// Convert **bold** markdown to <strong> tags, escape HTML
+function renderContent(text: string): string {
+  const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+import { ArrowLeft, CheckCircle2, Lock, BookOpen, Clock, Award, ChevronDown, Printer } from 'lucide-react';
 
-type Lesson = {
+interface Lesson {
   id: string;
   title: string;
   duration: string;
+  content: string;
   completed: boolean;
-  locked?: boolean;
-  videoUrl: string;
-  content: LessonContent;
-};
+  locked: boolean;
+}
 
-type Module = {
+interface Module {
   id: string;
   title: string;
-  description: string;
   lessons: Lesson[];
-};
-
-type Course = {
-  id: string;
-  title: string;
-  description: string;
-  instructor: string;
-  level: string;
-  totalLessons: number;
-  completedLessons: number;
-  progress: number;
-  modules: Module[];
-};
+}
 
 export default function BusinessEnglishCoursePage() {
-  const [expandedModule, setExpandedModule] = useState<string>('m1');
-  const [currentLesson, setCurrentLesson] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const certRef = useRef<HTMLDivElement>(null);
 
-  const course: Course = {
-    id: '1',
-    title: 'Business English Mastery',
-    description: 'Master professional English communication in workplace settings',
-    instructor: 'Sarah Johnson',
-    level: 'Intermediate',
-    totalLessons: 24,
-    completedLessons: 13,
-    progress: 54,
-    modules: [
-      {
-        id: 'm1',
-        title: 'Module 1: Email Writing',
-        description: 'Master professional email communication',
-        lessons: [
-          {
-            id: 'l1',
-            title: 'Introduction to Business Emails',
-            duration: '12 min',
-            completed: true,
-            videoUrl: 'https://example.com/video1.mp4',
-            content: {
-              summary: 'Learn the fundamentals of writing professional business emails',
-              keyPoints: [
-                'Understanding email structure and format',
-                'Professional vs casual tone',
-                'Subject line best practices',
-                'Opening and closing phrases'
-              ],
-              transcript: `
-Welcome to Business Email Writing!
+  const [modules, setModules] = useState<Module[]>([
+    {
+      id: 'm1', title: 'Module 1: Email Writing', lessons: [
+        { id: 'l1', title: 'Introduction to Business Emails', duration: '8 min read', completed: false, locked: false, content: `Professional email communication is the backbone of modern business. Every day, billions of emails are sent globally, and the quality of your emails directly impacts how people perceive you.\n\n**Key Principles:**\n\nClarity comes first. Every email should have one clear purpose. Before writing, ask yourself: "What do I want the reader to do after reading this?"\n\nStructure matters. Use the inverted pyramid — most important information first, supporting details next, background last.\n\n**The 5 Elements of Every Professional Email:**\n\n1. Subject Line — Be specific. "Q3 Budget Review — Action Required by Friday" is better than "Budget"\n2. Greeting — Match formality to your relationship. "Dear Mr. Patel" for first contact, "Hi Priya" for colleagues\n3. Body — One topic per email. Use short paragraphs (2-3 sentences max)\n4. Call to Action — Be explicit: "Please review and share your feedback by Thursday EOD"\n5. Sign-off — "Best regards" is safe for most situations\n\n**Common Mistakes:**\n- Writing "Please do the needful" (outdated and unclear)\n- Using "ASAP" without a specific deadline\n- Replying all unnecessarily\n- Missing the subject line\n\n**Practice:** Write an email to your manager requesting 2 days of leave next week. Include the reason, your plan for pending work, and suggest who can cover for you.` },
+        { id: 'l2', title: 'Formal vs Informal Communication', duration: '6 min read', completed: false, locked: false, content: `Understanding when to use formal or informal language is crucial in business settings.\n\n**Formal Language — Use When:**\n- First contact with someone\n- Writing to senior management\n- External client communication\n- Official requests or complaints\n\n**Examples of Formal Phrasing:**\n- ❌ "Hey, can you do this?" → ✅ "Could you please review this document?"\n- ❌ "Thanks!" → ✅ "Thank you for your time and consideration."\n- ❌ "Got it" → ✅ "I acknowledge receipt of your message."\n- ❌ "FYI" → ✅ "For your information/reference"\n\n**Informal (but professional) — Use When:**\n- Communicating with close colleagues\n- Internal team messages\n- Follow-up emails after relationship is established\n\n**The Spectrum:**\nVery Formal → Formal → Neutral → Informal → Very Informal\n"I would be grateful..." → "Could you please..." → "Can you..." → "Hey, could you..." → "Yo, do this"\n\nIn Indian business culture, it's generally better to err on the side of formality, especially with:\n- New contacts\n- People senior to you\n- Cross-cultural communication\n\n**Practice:** Rewrite this informal message formally: "Hey Raj, can you send me that file? Need it ASAP. Thanks!"` },
+        { id: 'l3', title: 'Email Structure & Templates', duration: '10 min read', completed: false, locked: false, content: `Master these 5 email templates and you'll handle 80% of business situations.\n\n**Template 1: Meeting Request**\nSubject: Meeting Request — [Topic] — [Proposed Date]\n\nDear [Name],\n\nI hope this email finds you well. I would like to schedule a meeting to discuss [topic].\n\nWould [date] at [time] work for you? The meeting should take approximately [duration].\n\nPlease let me know if this works, or suggest an alternative time.\n\nBest regards,\n[Your name]\n\n**Template 2: Follow-Up After Meeting**\nSubject: Follow-Up — [Meeting Topic] — Action Items\n\nHi [Name],\n\nThank you for your time today. Here's a summary of what we discussed:\n\n• [Key point 1]\n• [Key point 2]\n\nAction items:\n• [Person] will [task] by [deadline]\n• [Person] will [task] by [deadline]\n\nPlease let me know if I've missed anything.\n\nBest regards\n\n**Template 3: Polite Reminder**\nSubject: Gentle Reminder — [Original Topic]\n\nHi [Name],\n\nI hope you're doing well. I wanted to follow up on my previous email regarding [topic] sent on [date].\n\nI understand you may be busy, but I would appreciate your response by [new deadline] so we can [reason].\n\nThank you for your attention to this matter.\n\n**Template 4: Apologizing for a Mistake**\nSubject: Correction — [What was wrong]\n\nDear [Name],\n\nI apologize for the error in [what]. The correct [information] is [correction].\n\nI've taken steps to ensure this doesn't happen again. Please disregard the previous [email/document].\n\nSorry for any inconvenience.\n\n**Template 5: Requesting Information**\nSubject: Request for [Specific Information]\n\nDear [Name],\n\nI am writing to request [specific information] for [purpose].\n\nSpecifically, I need:\n1. [Item 1]\n2. [Item 2]\n\nCould you please share this by [deadline]? If you need any additional context, I'm happy to provide it.\n\nThank you in advance.\n\n**Practice:** Using Template 1, write a meeting request to your team lead about discussing the Q3 project timeline.` },
+        { id: 'l4', title: 'Common Email Mistakes', duration: '5 min read', completed: false, locked: false, content: `Avoid these common email mistakes that make you look unprofessional.\n\n**1. The Wall of Text**\nNobody reads a 10-paragraph email. Keep it short. If it needs to be long, use bullet points and headers.\n\nRule of thumb: If your email is longer than your phone screen, it should probably be a meeting.\n\n**2. Unclear Subject Lines**\n❌ "Hi" / "Question" / "Important" / "(no subject)"\n✅ "Budget Approval Needed — Project Alpha — Due Friday"\n\n**3. Reply All Abuse**\nOnly use Reply All when everyone genuinely needs to see your response. "Thanks!" to 50 people is not helpful.\n\n**4. Missing Attachments**\nAlways mention attachments in the body first, then attach before hitting send. Use the phrase "Please find attached" as a trigger to actually attach the file.\n\n**5. Emotional Emails**\nNever send an email when angry. Write it, save as draft, review after 1 hour. The "overnight rule" works even better.\n\n**6. Indian English Pitfalls**\n- "Please do the needful" → "Please complete this" or "Please take the necessary action"\n- "Kindly revert" → "Please respond" or "Please let me know"\n- "Prepone" → "Move up" or "Reschedule earlier"\n- "I have a doubt" → "I have a question"\n\n**7. Tone Deafness**\nRead your email aloud before sending. If it sounds rude, add softeners like "I'd appreciate", "When you get a chance", "I understand you're busy".\n\n**Quick Checklist Before Sending:**\n□ Clear subject line?\n□ Right recipients?\n□ One clear purpose?\n□ Attachments included?\n□ Proofread for typos?\n□ Appropriate tone?\n□ Clear call to action?` },
+      ]
+    },
+    {
+      id: 'm2', title: 'Module 2: Meeting Skills', lessons: [
+        { id: 'l5', title: 'Preparing for Meetings', duration: '7 min read', completed: false, locked: false, content: `Preparation is what separates productive meetings from time-wasters.\n\n**Before the Meeting:**\n\n1. Know the agenda — If there isn't one, ask for it or suggest one\n2. Do your homework — Read relevant documents, prepare data\n3. Prepare your talking points — Write 2-3 key things you want to say\n4. Test your tech — For virtual meetings, check camera, mic, and internet 10 minutes early\n\n**Key Phrases for Meetings:**\n\nOpening: "Thank you for joining. Today we'll be discussing..."\nSharing opinion: "In my view..." / "Based on the data, I believe..."\nAgreeing: "I completely agree with [name]'s point about..."\nDisagreeing politely: "I see your point, however..." / "That's an interesting perspective. Another way to look at it is..."\nAsking for clarification: "Could you elaborate on that?" / "What do you mean by...?"\nSummarizing: "So if I understand correctly..." / "To summarize what we've discussed..."\nClosing: "Let me recap the action items..."\n\n**Virtual Meeting Etiquette:**\n- Camera on (builds trust and engagement)\n- Mute when not speaking\n- Use the raise hand feature\n- Don't multitask — people can tell\n- Speak clearly and slightly slower than normal\n\n**Practice:** Write down 3 talking points for a meeting about launching a new product feature.` },
+        { id: 'l6', title: 'Leading Effective Discussions', duration: '8 min read', completed: false, locked: false, content: `Whether you're leading or participating, these skills make meetings productive.\n\n**The 3-Part Meeting Framework:**\n\n1. Opening (2 min): State purpose, expected outcome, time limit\n2. Discussion (bulk of time): Go through agenda items\n3. Closing (5 min): Summarize decisions, assign action items, set next meeting\n\n**Facilitating Discussion:**\n- "Let's hear from everyone on this. [Name], what are your thoughts?"\n- "We're running short on time. Let's table this for the next meeting."\n- "Great point. Can we get a concrete action item from this?"\n- "I notice we're going off-topic. Let's come back to [agenda item]."\n\n**Handling Difficult Situations:**\n\nSomeone dominates: "Thank you, [name]. I'd like to hear other perspectives too."\nAwkward silence: "Let me rephrase the question..." or "Shall I share my thoughts to get us started?"\nConflict: "Both perspectives are valid. How can we find a middle ground?"\nOff-topic: "That's important — let's add it to the parking lot and discuss after."\n\n**Taking and Sharing Notes:**\n\nUse this format for meeting minutes:\n- Date & attendees\n- Key discussion points (2-3 sentences each)\n- Decisions made\n- Action items: WHO will do WHAT by WHEN\n\n**Practice:** You're leading a 30-minute team standup. Write a brief agenda and 3 discussion prompts.` },
+      ]
+    },
+    {
+      id: 'm3', title: 'Module 3: Presentation Skills', lessons: [
+        { id: 'l7', title: 'Structuring Your Presentation', duration: '8 min read', completed: false, locked: false, content: `A great presentation follows the "Tell them" structure: Tell them what you'll tell them, tell them, then tell them what you told them.\n\n**The 10-20-30 Rule (Guy Kawasaki):**\n- 10 slides maximum\n- 20 minutes maximum\n- 30pt font minimum\n\n**Presentation Structure:**\n\n1. Hook (30 seconds) — Start with a surprising fact, question, or story. Never start with "Today I will talk about..."\n2. Problem (2 min) — What problem are you solving? Why should the audience care?\n3. Solution (5 min) — Your main content, divided into 3 key points\n4. Evidence (3 min) — Data, examples, case studies\n5. Call to Action (1 min) — What should the audience do next?\n6. Q&A (5 min) — Prepare for likely questions\n\n**Powerful Opening Lines:**\n- "What if I told you that [surprising fact]?"\n- "Imagine a world where [vision]..."\n- "[Relevant statistic] — and it's only getting worse."\n- "Last week, I made a mistake that taught me [lesson]."\n\n**Slide Design Tips:**\n- One idea per slide\n- Use images over text\n- Maximum 6 words per bullet\n- Dark text on light background for readability\n- Consistent fonts and colors\n\n**Practice:** Create a 5-slide outline for a presentation about "Why our team should adopt a new project management tool."` },
+        { id: 'l8', title: 'Delivery & Confidence', duration: '6 min read', completed: false, locked: false, content: `Content is 40% of a great presentation. Delivery is 60%.\n\n**Voice:**\n- Speak 20% slower than normal conversation\n- Vary your pace — slow down for important points\n- Use strategic pauses (2-3 seconds) after key statements\n- Project your voice to the back of the room\n\n**Body Language:**\n- Stand tall, shoulders back\n- Make eye contact — look at different sections of the audience\n- Use hand gestures naturally (don't grip the podium)\n- Move purposefully — don't pace nervously\n- Smile genuinely, especially at the start\n\n**Handling Nervousness:**\n- Prepare 3x more than you think you need\n- Practice out loud at least 3 times\n- Arrive early and familiarize yourself with the space\n- Power pose for 2 minutes before (hands on hips, feet apart)\n- Focus on helping the audience, not on being perfect\n- Remember: the audience wants you to succeed\n\n**Handling Q&A:**\n- Repeat the question so everyone hears it\n- "That's a great question. Here's what I think..."\n- If you don't know: "I don't have that data handy. Let me get back to you by [date]."\n- Bridge technique: "That's related to an important point..." (redirect to your key message)\n\n**Common Indian English Pronunciation Tips:**\n- "Schedule" — SHED-yool (not SKED-yool in British English context)\n- "Development" — stress on second syllable: de-VEL-op-ment\n- V vs W sounds — practice "very well" with distinct sounds\n\n**Practice:** Record yourself giving a 2-minute presentation about your favorite hobby. Watch it back and note 3 things to improve.` },
+      ]
+    },
+  ]);
 
-In today's digital workplace, email is the primary mode of communication. A well-written email can:
-- Build professional relationships
-- Communicate ideas clearly
-- Get faster responses
-- Reflect your professionalism
+  const [activeLesson, setActiveLesson] = useState<string | null>(null);
+  const [expandedModules, setExpandedModules] = useState<string[]>(['m1']);
+  const [showExam, setShowExam] = useState(false);
+  const [examAnswers, setExamAnswers] = useState<Record<number, number>>({});
+  const [examSubmitted, setExamSubmitted] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
 
-Key Elements of Professional Emails:
-1. Clear subject line
-2. Professional greeting
-3. Concise body
-4. Clear call-to-action
-5. Professional signature
+  // Load saved progress from DB
+  useEffect(() => {
+    fetch('/api/course-progress?courseId=business-english')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.completedLessons?.length) {
+          setModules((prev) =>
+            prev.map((m) => ({
+              ...m,
+              lessons: m.lessons.map((l) => ({
+                ...l,
+                completed: data.completedLessons.includes(l.id) ? true : l.completed,
+              })),
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
-Common Mistakes to Avoid:
-- Too casual language
-- Unclear subject lines
-- Wall of text
-- No clear purpose
-- Typos and errors
+  const allLessons = modules.flatMap((m) => m.lessons);
+  const completedCount = allLessons.filter((l) => l.completed).length;
+  const totalCount = allLessons.length;
+  const progress = Math.round((completedCount / totalCount) * 100);
+  const allCompleted = completedCount === totalCount;
 
-Practice Exercise:
-Write a professional email requesting a meeting with your manager to discuss a project update.
-              `,
-              downloadableResources: [
-                { name: 'Email Template Guide.pdf', size: '245 KB' },
-                { name: 'Common Email Phrases.pdf', size: '180 KB' }
-              ]
-            }
-          },
-          {
-            id: 'l2',
-            title: 'Formal vs Informal Communication',
-            duration: '15 min',
-            completed: true,
-            videoUrl: 'https://example.com/video2.mp4',
-            content: {
-              summary: 'Understand when to use formal or informal language in business emails',
-              keyPoints: [
-                'Identifying your audience',
-                'Formal language patterns',
-                'Informal vs casual tone',
-                'Cultural considerations'
-              ],
-              transcript: `
-Formal vs Informal Communication
-
-Understanding Context:
-The level of formality depends on:
-- Your relationship with the recipient
-- Company culture
-- Purpose of communication
-- Industry standards
-
-Formal Language Examples:
-❌ "Hey, can you do this?"
-✅ "Could you please review this document?"
-
-❌ "Thanks!"
-✅ "Thank you for your time and consideration."
-
-❌ "Got it"
-✅ "I acknowledge receipt of your message."
-
-Informal (but professional):
-- With close colleagues
-- Internal team communication
-- Follow-up emails
-- After established relationship
-
-Always Formal:
-- First contact
-- Senior management
-- External clients
-- Official requests
-- Complaints or concerns
-
-Practice Scenarios:
-1. Email to CEO requesting budget approval (FORMAL)
-2. Follow-up with teammate on project status (INFORMAL)
-3. Client proposal submission (FORMAL)
-4. Thank you note to colleague (INFORMAL/NEUTRAL)
-              `,
-              downloadableResources: [
-                { name: 'Formal Language Guide.pdf', size: '320 KB' }
-              ]
-            }
-          },
-          {
-            id: 'l3',
-            title: 'Email Structure & Templates',
-            duration: '18 min',
-            completed: true,
-            videoUrl: 'https://example.com/video3.mp4',
-            content: {
-              summary: 'Learn proven email structures and ready-to-use templates',
-              keyPoints: [
-                'The 3-part email structure',
-                'Opening strategies',
-                'Body paragraph organization',
-                'Strong closing statements'
-              ],
-              transcript: `
-Professional Email Structure
-
-The 3-Part Formula:
-1. Opening (Greeting + Context)
-2. Body (Main Message)
-3. Closing (Action + Sign-off)
-
-Part 1 - Opening:
-"Dear [Name],
-
-I hope this email finds you well. I am writing to discuss [topic]."
-
-Part 2 - Body:
-Present your points clearly:
-- Use bullet points for clarity
-- Keep paragraphs short (3-4 lines max)
-- One idea per paragraph
-- Use active voice
-
-Part 3 - Closing:
-"Please let me know if you need any additional information. I look forward to hearing from you.
-
-Best regards,
-[Your Name]"
-
-Templates You'll Get:
-
-1. Meeting Request:
-Subject: Meeting Request - [Project Name]
-Dear [Name],
-I hope you're doing well. I would like to schedule a meeting to discuss [topic].
-Could you please let me know your availability for [timeframe]?
-Best regards,
-
-2. Follow-up:
-Subject: Following up on [Topic]
-Dear [Name],
-I wanted to follow up on my previous email regarding [topic].
-Have you had a chance to review [document/proposal]?
-Looking forward to your response.
-
-3. Introduction:
-Subject: Introduction - [Your Name] from [Company]
-Dear [Name],
-My name is [Your Name] and I am [position] at [company].
-I am reaching out to discuss potential collaboration opportunities.
-              `,
-              downloadableResources: [
-                { name: '20 Email Templates.pdf', size: '450 KB' },
-                { name: 'Email Checklist.pdf', size: '125 KB' }
-              ]
-            }
-          },
-          {
-            id: 'l4',
-            title: 'Common Email Mistakes to Avoid',
-            duration: '10 min',
-            completed: true,
-            videoUrl: 'https://example.com/video4.mp4',
-            content: {
-              summary: 'Identify and avoid the most common email writing mistakes',
-              keyPoints: [
-                'Grammar and spelling errors',
-                'Unclear subject lines',
-                'Too long or too short',
-                'Missing context or attachments'
-              ],
-              transcript: `
-Top 10 Email Mistakes
-
-1. Vague Subject Lines
-❌ "Quick question"
-✅ "Budget Approval Request for Q2 Marketing Campaign"
-
-2. No Clear Purpose
-❌ Rambling about multiple topics
-✅ One clear purpose per email
-
-3. Reply All Abuse
-Only use Reply All when everyone needs to see your response
-
-4. Forgetting Attachments
-Tip: Attach first, write email second
-
-5. Too Long
-Keep under 5 paragraphs
-Use bullet points
-Get to the point
-
-6. No Greeting
-❌ Starting directly with "I need..."
-✅ "Dear John," or "Hi Sarah,"
-
-7. Unclear Call-to-Action
-❌ "Let me know what you think"
-✅ "Please approve the budget by Friday, March 15"
-
-8. Poor Formatting
-- Use paragraphs
-- Add white space
-- Use bold for key points
-- Number action items
-
-9. Sending When Emotional
-Wait 10 minutes before sending sensitive emails
-
-10. Not Proofreading
-Always read before sending
-Use spell check
-Check recipient names
-
-Practice: Review these bad examples and rewrite them professionally
-              `,
-              downloadableResources: [
-                { name: 'Email Mistakes Checklist.pdf', size: '190 KB' }
-              ]
-            }
-          }
-        ]
-      },
-      {
-        id: 'm2',
-        title: 'Module 2: Meeting Communication',
-        description: 'Effective communication in business meetings',
-        lessons: [
-          {
-            id: 'l5',
-            title: 'Preparing for Meetings',
-            duration: '14 min',
-            completed: true,
-            videoUrl: 'https://example.com/video5.mp4',
-            content: {
-              summary: 'Learn how to prepare effectively for any business meeting',
-              keyPoints: [
-                'Setting meeting objectives',
-                'Creating agendas',
-                'Pre-meeting research',
-                'Gathering necessary materials'
-              ],
-              transcript: `Coming soon - Full lesson content`,
-              downloadableResources: [
-                { name: 'Meeting Prep Template.pdf', size: '280 KB' }
-              ]
-            }
-          },
-          {
-            id: 'l6',
-            title: 'Active Participation Techniques',
-            duration: '16 min',
-            completed: true,
-            videoUrl: 'https://example.com/video6.mp4',
-            content: {
-              summary: 'Techniques for contributing effectively in meetings',
-              keyPoints: [
-                'When to speak up',
-                'How to interject politely',
-                'Building on others\' ideas',
-                'Disagreeing professionally'
-              ],
-              transcript: `Coming soon - Full lesson content`,
-              downloadableResources: []
-            }
-          },
-          {
-            id: 'l7',
-            title: 'Taking Meeting Notes',
-            duration: '12 min',
-            completed: false,
-            videoUrl: 'https://example.com/video7.mp4',
-            content: {
-              summary: 'Effective note-taking strategies for business meetings',
-              keyPoints: [],
-              transcript: '',
-              downloadableResources: []
-            }
-          },
-          {
-            id: 'l8',
-            title: 'Following Up After Meetings',
-            duration: '10 min',
-            completed: false,
-            videoUrl: 'https://example.com/video8.mp4',
-            content: {
-              summary: 'How to write effective meeting follow-up emails',
-              keyPoints: [],
-              transcript: '',
-              downloadableResources: []
-            }
-          }
-        ]
-      },
-      {
-        id: 'm3',
-        title: 'Module 3: Presentations',
-        description: 'Deliver compelling business presentations',
-        lessons: [
-          {
-            id: 'l9',
-            title: 'Structuring Your Presentation',
-            duration: '20 min',
-            completed: false,
-            videoUrl: 'https://example.com/video9.mp4',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l10',
-            title: 'PowerPoint Best Practices',
-            duration: '15 min',
-            completed: false,
-            videoUrl: 'https://example.com/video10.mp4',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l11',
-            title: 'Handling Q&A Sessions',
-            duration: '12 min',
-            completed: false,
-            videoUrl: 'https://example.com/video11.mp4',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l12',
-            title: 'Body Language & Confidence',
-            duration: '18 min',
-            completed: false,
-            videoUrl: 'https://example.com/video12.mp4',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          }
-        ]
-      },
-      {
-        id: 'm4',
-        title: 'Module 4: Negotiations',
-        description: 'Master negotiation and persuasion',
-        lessons: [
-          {
-            id: 'l13',
-            title: 'Negotiation Fundamentals',
-            duration: '22 min',
-            completed: false,
-            locked: true,
-            videoUrl: '',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l14',
-            title: 'Win-Win Strategies',
-            duration: '18 min',
-            completed: false,
-            locked: true,
-            videoUrl: '',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l15',
-            title: 'Handling Difficult Conversations',
-            duration: '20 min',
-            completed: false,
-            locked: true,
-            videoUrl: '',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          },
-          {
-            id: 'l16',
-            title: 'Closing the Deal',
-            duration: '15 min',
-            completed: false,
-            locked: true,
-            videoUrl: '',
-            content: { summary: '', keyPoints: [], transcript: '', downloadableResources: [] }
-          }
-        ]
-      }
-    ]
+  const markComplete = (lessonId: string) => {
+    setModules((prev) =>
+      prev.map((m) => ({
+        ...m,
+        lessons: m.lessons.map((l) => (l.id === lessonId ? { ...l, completed: true } : l)),
+      }))
+    );
+    // Save to DB
+    fetch('/api/course-progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courseId: 'business-english', lessonId }),
+    }).catch(() => {});
+    setActiveLesson(null);
   };
 
-  const toggleModule = (moduleId: string) => {
-    setExpandedModule(expandedModule === moduleId ? '' : moduleId);
+  const examQuestions = [
+    { q: 'What should every professional email have?', options: ['Emojis', 'A clear subject line', 'Multiple topics', 'Informal greeting'], correct: 1 },
+    { q: 'Which is the correct formal alternative to "Please do the needful"?', options: ['Do it now', 'Please complete this task', 'ASAP please', 'Kindly revert'], correct: 1 },
+    { q: 'What is the recommended meeting structure?', options: ['Jump straight to discussion', 'Opening → Discussion → Closing with action items', 'Let everyone talk freely', 'Read slides aloud'], correct: 1 },
+    { q: 'How should you handle a question you don\'t know the answer to?', options: ['Make something up', 'Ignore the question', 'Say "I\'ll get back to you by [date]"', 'Change the topic'], correct: 2 },
+    { q: 'What is the 10-20-30 rule for presentations?', options: ['10 hours, 20 slides, 30 people', '10 slides, 20 minutes, 30pt font', '10 topics, 20 examples, 30 minutes', '10 people, 20 slides, 30 minutes'], correct: 1 },
+  ];
+
+  const examScore = Object.keys(examAnswers).length === examQuestions.length
+    ? examQuestions.reduce((score, q, i) => score + (examAnswers[i] === q.correct ? 1 : 0), 0)
+    : 0;
+  const passed = examScore >= 4;
+
+  const handlePrint = () => {
+    window.print();
   };
 
-  const openLesson = (lessonId: string) => {
-    const lesson = course.modules.flatMap(m => m.lessons).find(l => l.id === lessonId);
-    if (lesson && !lesson.locked) {
-      setCurrentLesson(lessonId);
-    }
-  };
-
-  const currentLessonData = currentLesson 
-    ? course.modules.flatMap(m => m.lessons).find(l => l.id === currentLesson)
-    : null;
-
-  if (currentLesson && currentLessonData) {
+  // Render active lesson content
+  if (activeLesson) {
+    const lesson = allLessons.find((l) => l.id === activeLesson)!;
     return (
-      <div className="max-w-6xl mx-auto">
-        {/* Video Player */}
-        <div className="bg-black rounded-2xl overflow-hidden mb-6">
-          <div className="aspect-video bg-gray-900 flex items-center justify-center">
-            <Play className="w-20 h-20 text-white opacity-50" />
+      <div className="max-w-3xl mx-auto">
+        <button onClick={() => setActiveLesson(null)} className="flex items-center gap-2 text-sm text-warm-600 hover:text-primary-600 mb-6">
+          <ArrowLeft className="w-4 h-4" /> Back to course
+        </button>
+        <div className="bg-white rounded-2xl border border-warm-200 p-6 lg:p-8">
+          <div className="flex items-center gap-2 text-xs text-warm-500 mb-2">
+            <Clock className="w-3.5 h-3.5" /> {lesson.duration}
           </div>
-        </div>
-
-        {/* Lesson Header */}
-        <div className="bg-white rounded-2xl border border-warm-200 p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-primary-900 mb-2">
-                {currentLessonData.title}
-              </h1>
-              <p className="text-warm-600">{currentLessonData.content.summary}</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-primary-900 mb-6">{lesson.title}</h1>
+          <div
+            className="prose prose-sm max-w-none text-warm-800 leading-relaxed whitespace-pre-line [&_strong]:font-bold [&_strong]:text-primary-900"
+            dangerouslySetInnerHTML={{ __html: renderContent(lesson.content) }}
+          />
+          <div className="mt-8 pt-6 border-t border-warm-200 flex items-center justify-between">
+            <div className="text-sm text-warm-600">
+              {lesson.completed ? (
+                <span className="flex items-center gap-1 text-green-600 font-medium"><CheckCircle2 className="w-4 h-4" /> Completed</span>
+              ) : (
+                'Mark as completed when you\'re done'
+              )}
             </div>
-            <button
-              onClick={() => setCurrentLesson(null)}
-              className="px-4 py-2 bg-warm-100 text-warm-700 rounded-lg hover:bg-warm-200 transition-all"
-            >
-              Back to Course
-            </button>
-          </div>
-
-          {/* Key Points */}
-          {currentLessonData.content.keyPoints.length > 0 && (
-            <div className="mb-6">
-              <h3 className="font-semibold text-primary-900 mb-3">Key Learning Points:</h3>
-              <ul className="space-y-2">
-                {currentLessonData.content.keyPoints.map((point, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-warm-700">{point}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Transcript */}
-          {currentLessonData.content.transcript && (
-            <div className="mb-6">
-              <h3 className="font-semibold text-primary-900 mb-3">Lesson Transcript:</h3>
-              <div className="bg-warm-50 rounded-xl p-6 text-sm text-warm-700 whitespace-pre-line leading-relaxed">
-                {currentLessonData.content.transcript}
-              </div>
-            </div>
-          )}
-
-          {/* Downloadable Resources */}
-          {currentLessonData.content.downloadableResources.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-primary-900 mb-3">Downloadable Resources:</h3>
-              <div className="space-y-2">
-                {currentLessonData.content.downloadableResources.map((resource, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between p-4 bg-warm-50 rounded-lg hover:bg-warm-100 transition-all"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Download className="w-5 h-5 text-primary-600" />
-                      <div>
-                        <p className="font-medium text-primary-900">{resource.name}</p>
-                        <p className="text-xs text-warm-600">{resource.size}</p>
-                      </div>
-                    </div>
-                    <button className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
-                      Download
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Mark Complete */}
-        <div className="bg-white rounded-2xl border border-warm-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-primary-900 mb-1">Finished this lesson?</h3>
-              <p className="text-sm text-warm-600">Mark as complete to track your progress</p>
-            </div>
-            <button className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5" />
-              Mark Complete
-            </button>
+            {!lesson.completed && (
+              <button onClick={() => markComplete(lesson.id)} className="px-6 py-2.5 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all flex items-center gap-2 text-sm">
+                <CheckCircle2 className="w-4 h-4" /> Mark Complete
+              </button>
+            )}
           </div>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="max-w-6xl mx-auto">
-      {/* Course Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-8 text-white">
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex-1">
-            <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-sm font-medium mb-4">
-              {course.level}
-            </span>
-            <h1 className="text-4xl font-bold mb-3">{course.title}</h1>
-            <p className="text-white/90 text-lg mb-4">{course.description}</p>
-            <p className="text-white/80">Instructor: {course.instructor}</p>
+  // Certificate view
+  if (showCertificate) {
+    const userName = session?.user?.name || 'Student';
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return (
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <button onClick={() => setShowCertificate(false)} className="flex items-center gap-2 text-sm text-warm-600 hover:text-primary-600">
+            <ArrowLeft className="w-4 h-4" /> Back to course
+          </button>
+          <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-all">
+            <Printer className="w-4 h-4" /> Print / Save as PDF
+          </button>
+        </div>
+        <div ref={certRef} className="bg-white border-4 border-primary-600 rounded-2xl p-8 lg:p-12 text-center print:border-4 print:shadow-none">
+          <div className="mb-6">
+            <BoliLogo size={64} className="mx-auto mb-3" />
+            <div className="text-sm text-warm-500 uppercase tracking-widest font-medium">Boli English Academy</div>
+          </div>
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl font-bold text-primary-900 mb-2">Certificate of Completion</h1>
+            <div className="w-24 h-1 bg-primary-600 mx-auto rounded-full" />
+          </div>
+          <p className="text-warm-600 mb-2">This certifies that</p>
+          <h2 className="text-2xl lg:text-3xl font-bold text-primary-900 mb-4">{userName}</h2>
+          <p className="text-warm-600 mb-2">has successfully completed the course</p>
+          <h3 className="text-xl font-bold text-primary-800 mb-1">Business English Mastery</h3>
+          <p className="text-sm text-warm-500 mb-6">with a final exam score of {examScore}/{examQuestions.length}</p>
+          <div className="flex items-center justify-center gap-8 text-sm text-warm-600">
+            <div>
+              <div className="font-semibold text-primary-900">{today}</div>
+              <div className="text-xs">Date of Completion</div>
+            </div>
+            <div className="w-px h-8 bg-warm-200" />
+            <div>
+              <div className="font-semibold text-primary-900">CERT-{Date.now().toString(36).toUpperCase()}</div>
+              <div className="text-xs">Certificate ID</div>
+            </div>
           </div>
         </div>
+      </div>
+    );
+  }
 
-        {/* Progress */}
-        <div className="bg-white/10 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-semibold">Your Progress</span>
-            <span className="text-2xl font-bold">{course.progress}%</span>
+  // Exam view
+  if (showExam) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <button onClick={() => { setShowExam(false); setExamSubmitted(false); setExamAnswers({}); }} className="flex items-center gap-2 text-sm text-warm-600 hover:text-primary-600 mb-6">
+          <ArrowLeft className="w-4 h-4" /> Back to course
+        </button>
+        <div className="bg-white rounded-2xl border border-warm-200 p-6 lg:p-8">
+          <h1 className="text-xl font-bold text-primary-900 mb-1">Final Exam</h1>
+          <p className="text-sm text-warm-600 mb-6">Score 4/5 or higher to earn your certificate</p>
+
+          <div className="space-y-6">
+            {examQuestions.map((q, i) => (
+              <div key={i} className="p-4 bg-warm-50 rounded-xl">
+                <p className="font-medium text-primary-900 text-sm mb-3">{i + 1}. {q.q}</p>
+                <div className="space-y-2">
+                  {q.options.map((opt, j) => {
+                    const selected = examAnswers[i] === j;
+                    const isCorrect = examSubmitted && j === q.correct;
+                    const isWrong = examSubmitted && selected && j !== q.correct;
+                    return (
+                      <button
+                        key={j}
+                        onClick={() => !examSubmitted && setExamAnswers({ ...examAnswers, [i]: j })}
+                        disabled={examSubmitted}
+                        className={`w-full text-left p-3 rounded-lg text-sm transition-all ${
+                          isCorrect ? 'bg-green-100 border-green-400 border-2 text-green-800' :
+                          isWrong ? 'bg-red-100 border-red-400 border-2 text-red-800' :
+                          selected ? 'bg-primary-100 border-primary-400 border-2 text-primary-800' :
+                          'bg-white border border-warm-200 hover:border-primary-300'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-white rounded-full transition-all"
-              style={{ width: `${course.progress}%` }}
-            />
+
+          {!examSubmitted ? (
+            <button
+              onClick={() => Object.keys(examAnswers).length === examQuestions.length && setExamSubmitted(true)}
+              disabled={Object.keys(examAnswers).length !== examQuestions.length}
+              className="mt-6 w-full py-3 bg-primary-600 text-white rounded-xl font-semibold hover:bg-primary-700 transition-all disabled:opacity-50"
+            >
+              Submit Exam
+            </button>
+          ) : (
+            <div className="mt-6 p-6 rounded-xl text-center" style={{ backgroundColor: passed ? '#f0fdf4' : '#fef2f2' }}>
+              <div className="text-2xl font-bold mb-2" style={{ color: passed ? '#16a34a' : '#dc2626' }}>
+                {examScore}/{examQuestions.length}
+              </div>
+              <p className="text-sm mb-4" style={{ color: passed ? '#15803d' : '#b91c1c' }}>
+                {passed ? 'Congratulations! You passed!' : 'You need 4/5 to pass. Try again!'}
+              </p>
+              {passed ? (
+                <button onClick={() => setShowCertificate(true)} className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all">
+                  <Award className="w-4 h-4 inline mr-2" /> View Certificate
+                </button>
+              ) : (
+                <button onClick={() => { setExamSubmitted(false); setExamAnswers({}); }} className="px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all">
+                  Retake Exam
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Main course view
+  return (
+    <div className="max-w-4xl mx-auto">
+      <Link href="/dashboard/courses" className="flex items-center gap-2 text-sm text-warm-600 hover:text-primary-600 mb-6">
+        <ArrowLeft className="w-4 h-4" /> Back to courses
+      </Link>
+
+      {/* Course header */}
+      <div className="bg-gradient-to-r from-primary-400 to-primary-500 rounded-2xl p-6 lg:p-8 mb-8 text-white">
+        <span className="inline-block px-3 py-1 bg-white/20 rounded-full text-sm font-medium mb-3">Intermediate</span>
+        <h1 className="text-2xl lg:text-3xl font-bold mb-2">Business English Mastery</h1>
+        <p className="text-white/80 text-sm mb-4">Complete guide to professional English communication</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 text-sm text-white/80">
+            <span>{totalCount} lessons</span>
+            <span>{completedCount} completed</span>
           </div>
-          <p className="text-white/80 text-sm mt-2">
-            {course.completedLessons} of {course.totalLessons} lessons completed
-          </p>
+          <span className="text-lg font-bold">{progress}%</span>
+        </div>
+        <div className="w-full h-2 bg-white/20 rounded-full mt-2 overflow-hidden">
+          <div className="h-full bg-white rounded-full transition-all" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
-      {/* Course Content */}
-      <div className="space-y-4">
-        {course.modules.map((module) => (
-          <div key={module.id} className="bg-white rounded-2xl border border-warm-200 overflow-hidden">
-            {/* Module Header */}
+      {/* Modules */}
+      <div className="space-y-4 mb-8">
+        {modules.map((module) => (
+          <div key={module.id} className="bg-white rounded-xl border border-warm-200 overflow-hidden">
             <button
-              onClick={() => toggleModule(module.id)}
-              className="w-full p-6 flex items-center justify-between hover:bg-warm-50 transition-all"
+              onClick={() => setExpandedModules((prev) => prev.includes(module.id) ? prev.filter((m) => m !== module.id) : [...prev, module.id])}
+              className="w-full flex items-center justify-between p-4 hover:bg-warm-50 transition-colors"
             >
-              <div className="flex-1 text-left">
-                <h3 className="text-xl font-bold text-primary-900 mb-1">
-                  {module.title}
-                </h3>
-                <p className="text-sm text-warm-600">{module.description}</p>
-                <p className="text-xs text-warm-500 mt-2">
-                  {module.lessons.filter(l => l.completed).length} / {module.lessons.length} lessons
-                </p>
+              <div className="flex items-center gap-3">
+                <BookOpen className="w-5 h-5 text-primary-600" />
+                <span className="font-semibold text-primary-900 text-sm">{module.title}</span>
               </div>
-              {expandedModule === module.id ? (
-                <ChevronUp className="w-6 h-6 text-warm-600" />
-              ) : (
-                <ChevronDown className="w-6 h-6 text-warm-600" />
-              )}
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-warm-500">
+                  {module.lessons.filter((l) => l.completed).length}/{module.lessons.length}
+                </span>
+                <ChevronDown className={`w-4 h-4 text-warm-400 transition-transform ${expandedModules.includes(module.id) ? 'rotate-180' : ''}`} />
+              </div>
             </button>
-
-            {/* Lessons */}
-            {expandedModule === module.id && (
+            {expandedModules.includes(module.id) && (
               <div className="border-t border-warm-200">
                 {module.lessons.map((lesson) => (
                   <button
                     key={lesson.id}
-                    onClick={() => openLesson(lesson.id)}
-                    disabled={lesson.locked}
-                    className={`w-full p-4 flex items-center gap-4 border-b border-warm-100 last:border-0 transition-all ${
-                      lesson.locked
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:bg-warm-50 cursor-pointer'
-                    }`}
+                    onClick={() => setActiveLesson(lesson.id)}
+                    className="w-full flex items-center gap-3 p-4 hover:bg-warm-50 transition-colors text-left border-b border-warm-100 last:border-b-0"
                   >
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      lesson.completed
-                        ? 'bg-green-100'
-                        : lesson.locked
-                        ? 'bg-warm-100'
-                        : 'bg-blue-100'
-                    }`}>
-                      {lesson.completed ? (
-                        <CheckCircle2 className="w-6 h-6 text-green-600" />
-                      ) : lesson.locked ? (
-                        <Lock className="w-6 h-6 text-warm-400" />
-                      ) : (
-                        <Play className="w-6 h-6 text-blue-600" />
-                      )}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${lesson.completed ? 'bg-green-100' : 'bg-blue-100'}`}>
+                      {lesson.completed ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <BookOpen className="w-4 h-4 text-blue-600" />}
                     </div>
-                    <div className="flex-1 text-left">
-                      <h4 className="font-semibold text-primary-900">{lesson.title}</h4>
-                      <div className="flex items-center gap-2 text-sm text-warm-600 mt-1">
-                        <Clock className="w-4 h-4" />
-                        <span>{lesson.duration}</span>
-                        {lesson.completed && (
-                          <span className="ml-2 text-green-600 font-medium">✓ Completed</span>
-                        )}
-                      </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-primary-900 text-sm">{lesson.title}</div>
+                      <div className="text-xs text-warm-500 mt-0.5">{lesson.duration}</div>
                     </div>
+                    {lesson.completed && <span className="text-xs text-green-600 font-medium">Done</span>}
                   </button>
                 ))}
               </div>
@@ -669,18 +341,14 @@ Practice: Review these bad examples and rewrite them professionally
         ))}
       </div>
 
-      {/* Certificate Section */}
-      {course.progress === 100 && (
-        <div className="mt-8 bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-8 text-center">
-          <Award className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-primary-900 mb-2">
-            Congratulations! 🎉
-          </h3>
-          <p className="text-warm-700 mb-6">
-            You&apos;ve completed all lessons. Claim your certificate now!
-          </p>
-          <button className="px-8 py-4 bg-yellow-600 text-white rounded-xl font-bold hover:bg-yellow-700 transition-all">
-            Download Certificate
+      {/* Exam / Certificate CTA */}
+      {allCompleted && (
+        <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-6 text-center">
+          <Award className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
+          <h3 className="text-xl font-bold text-primary-900 mb-2">All lessons completed!</h3>
+          <p className="text-sm text-warm-600 mb-4">Take the final exam to earn your certificate</p>
+          <button onClick={() => setShowExam(true)} className="px-8 py-3 bg-yellow-600 text-white rounded-xl font-bold hover:bg-yellow-700 transition-all">
+            Take Final Exam
           </button>
         </div>
       )}

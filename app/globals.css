@@ -448,3 +448,20 @@ p {
 .animate-bounce-once {
   animation: bounce-once 0.6s ease-out;
 }
+
+/* =========================
+   Mobile Dashboard - Bottom Nav Safe Area
+   ========================= */
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

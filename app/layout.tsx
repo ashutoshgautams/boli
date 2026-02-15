@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import AuthProvider from "./components/AuthProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Boli - Master English Through Conversation",
   description: "Learn, practice, and speak English with confidence",
+   icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -13,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

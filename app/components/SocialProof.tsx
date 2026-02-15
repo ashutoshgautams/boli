@@ -4,67 +4,63 @@ interface Testimonial {
   quote: string;
   author: string;
   role: string;
-  company: string;
+  company?: string;
   avatar: string;
   rating: number;
-  metric: string;
+  badge?: string;
 }
 
 export default function SocialProof() {
   const testimonials: Testimonial[] = [
     {
-      quote: "Landed my dream job at Google after 3 months. The mock interviews and live practice were game-changers.",
-      author: "Priya Sharma",
-      role: "Software Engineer",
-      company: "Google",
+      quote: "Been using the beta for 2 weeks. The mock interview feature is surprisingly helpful - caught mistakes I didn't even know I was making.",
+      author: "Priya S.",
+      role: "Software Developer",
+      company: "Tech Startup",
       avatar: "PS",
       rating: 5,
-      metric: "8.5 IELTS Score",
+      badge: "Early Access User",
     },
     {
-      quote: "From struggling with presentations to confidently leading client calls. The certificate helped too!",
-      author: "Rajesh Kumar",
-      role: "Senior Consultant",
-      company: "Deloitte",
+      quote: "Finally, something that doesn't feel like a classroom. The live sessions are casual and I'm actually enjoying practicing English.",
+      author: "Rajesh K.",
+      role: "Consultant",
       avatar: "RK",
-      rating: 5,
-      metric: "12 Weeks to Fluency",
+      rating: 4,
+      badge: "Beta Tester",
     },
     {
-      quote: "Cleared IELTS with 8.5 overall. The structured courses and speaking practice made all the difference.",
-      author: "Ananya Reddy",
-      role: "MBA Candidate",
-      company: "IIM Bangalore",
+      quote: "I've tried 3 apps before this. What I like here is the focus on speaking practice, not just grammar lessons. Excited to see where this goes!",
+      author: "Ananya R.",
+      role: "MBA Student",
       avatar: "AR",
       rating: 5,
-      metric: "8.5 IELTS Score",
+      badge: "Week 1",
     },
     {
-      quote: "Promoted to team lead within 6 months. My confidence in English meetings improved drastically.",
-      author: "Vikram Patel",
+      quote: "The coaches are real professionals, not scripted teachers. Had my first session yesterday and already feel more confident.",
+      author: "Vikram P.",
       role: "Team Lead",
-      company: "Wipro",
+      company: "IT Services",
       avatar: "VP",
-      rating: 5,
-      metric: "6 Month Transformation",
+      rating: 4,
+      badge: "Early Access User",
     },
     {
-      quote: "The speaking club sessions are incredible. I practice daily and see real improvement every week.",
-      author: "Meera Singh",
+      quote: "Love the speaking club concept. Still early days but I can see this becoming part of my daily routine.",
+      author: "Meera S.",
       role: "Product Manager",
-      company: "Flipkart",
       avatar: "MS",
       rating: 5,
-      metric: "200+ Practice Hours",
+      badge: "Beta Tester",
     },
     {
-      quote: "Interview prep helped me crack 5 companies. The 1:1 coaching made all the difference in my job search.",
-      author: "Arjun Nair",
+      quote: "Joined for interview prep. The 1:1 coaching is worth it - got specific feedback I couldn't get from YouTube videos.",
+      author: "Arjun N.",
       role: "Data Analyst",
-      company: "Amazon",
       avatar: "AN",
       rating: 5,
-      metric: "5 Job Offers",
+      badge: "Week 2",
     },
   ];
 
@@ -72,27 +68,27 @@ export default function SocialProof() {
 
   return (
     <section className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-warm-50 to-surface">
-      {/* Header - Honest credibility */}
+      {/* Header - Honest about launch stage */}
       <div className="max-w-7xl mx-auto text-center mb-16">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-4">
-          <span></span>
-          <span>Built by experts with 6+ years of experience</span>
+          <span>🚀</span>
+          <span>Now in Early Access</span>
         </div>
         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-          Built for professionals across India
+          What early users are saying
         </h2>
         <p className="inline-flex items-center text-lg text-warm-700 max-w-2xl mx-auto">
-          Our coaches have helped thousands improve their English at top companies - now we&apos;re bringing that expertise to everyone.
+          We&apos;ve opened access to a small group of professionals. Here&apos;s their honest feedback as we build together.
         </p>
       </div>
 
-      {/* Credibility Grid - Honest */}
+      {/* Credibility Grid - Realistic for launch */}
       <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
         {[
-          { value: '21+', label: 'Expert coaches' },
+          { value: '21+', label: 'Expert coaches onboard' },
           { value: '6+ yrs', label: 'Avg. coach experience' },
-          { value: 'Free', label: 'To get started' },
-          { value: 'Daily', label: 'Live sessions planned' },
+          { value: 'Free', label: 'To start practicing' },
+          { value: '50+', label: 'Early access users' },
         ].map((stat, idx) => (
           <div
             key={idx}
@@ -106,9 +102,6 @@ export default function SocialProof() {
 
       {/* Marquee Testimonials - Row 1 */}
       <div className="relative mb-8">
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-warm-50 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-warm-50 to-transparent z-10 pointer-events-none" />
-
         <div className="flex gap-6 animate-marquee-slow">
           {[...testimonials, ...testimonials, ...testimonials].map((testimonial, idx) => (
             <TestimonialCard key={`row1-${idx}`} testimonial={testimonial} />
@@ -118,9 +111,6 @@ export default function SocialProof() {
 
       {/* Marquee Testimonials - Row 2 */}
       <div className="relative mb-16">
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-warm-50 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-warm-50 to-transparent z-10 pointer-events-none" />
-
         <div className="flex gap-6 animate-marquee-slower-reverse">
           {[...testimonials.slice().reverse(), ...testimonials.slice().reverse(), ...testimonials.slice().reverse()].map((testimonial, idx) => (
             <TestimonialCard key={`row2-${idx}`} testimonial={testimonial} />
@@ -128,18 +118,15 @@ export default function SocialProof() {
         </div>
       </div>
 
-      {/* Company logos marquee - continuous stream */}
+      {/* Company logos marquee */}
       <div className="relative max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <p className="text-sm font-medium text-warm-700 uppercase tracking-wider">
-            Our coaches have trained professionals at
+            Our coaches have worked with professionals at
           </p>
         </div>
 
         <div className="relative overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-warm-50 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-warm-50 to-transparent z-10 pointer-events-none" />
-
           <div className="flex gap-8 animate-marquee-medium">
             {[...companies, ...companies, ...companies, ...companies, ...companies].map((company, idx) => (
               <div
@@ -161,7 +148,11 @@ export default function SocialProof() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-primary-600 text-lg">✓</span>
-          <span>100% human-led sessions, no AI replacement</span>
+          <span>Early access pricing available now</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-primary-600 text-lg">✓</span>
+          <span>New features added weekly</span>
         </div>
       </div>
     </section>
@@ -171,7 +162,7 @@ export default function SocialProof() {
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <div className="flex-shrink-0 w-[400px] bg-surface border border-warm-200 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:border-primary-300 transition-all duration-500 group">
-      {/* Rating & Metric */}
+      {/* Rating & Badge */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex gap-1">
           {[...Array(testimonial.rating)].map((_, i) => (
@@ -180,9 +171,11 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
             </svg>
           ))}
         </div>
-        <span className="text-xs font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
-          {testimonial.metric}
-        </span>
+        {testimonial.badge && (
+          <span className="text-xs font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
+            {testimonial.badge}
+          </span>
+        )}
       </div>
 
       {/* Quote */}
@@ -198,10 +191,11 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         <div className="min-w-0">
           <div className="font-semibold text-foreground truncate">{testimonial.author}</div>
           <div className="text-sm text-warm-700 truncate">
-            {testimonial.role} • {testimonial.company}
+            {testimonial.role}{testimonial.company && ` • ${testimonial.company}`}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
