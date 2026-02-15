@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import Header from '../components/Header';
+import BoliLogo from '../components/Bolilogo';
 import Footer from '../components/Footer';
 import {
-  Trophy, Clock, Target, Zap, Star, TrendingUp,
+  ArrowLeft, Trophy, Clock, Target, Zap, Star, TrendingUp,
   CheckCircle, XCircle, ArrowRight, Share2,
   Brain, Award, Users, Crown, ChevronRight, Timer,
 } from 'lucide-react';
@@ -91,7 +91,7 @@ function calcPoints(difficulty: string, time: number, streak: number) {
 
 export default function VocabChallengePage() {
   const [view, setView] = useState<'landing' | 'playing' | 'result'>('landing');
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [baseElo, setBaseElo] = useState(800);
   const isLoggedIn = !!session?.user;
 
@@ -100,13 +100,41 @@ export default function VocabChallengePage() {
   }, []);
 
   return (
-    <>
-      <Header />
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-warm-50">
+      {/* Header - Only show for non-logged-in users */}
+      {status !== 'loading' && !session && (
+        <header className="border-b border-warm-200 bg-white/80 backdrop-blur-sm sticky top-0 z-40">
+          <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <BoliLogo size={36} />
+              <span className="text-xl font-bold text-primary-900">Boli</span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                Log in
+              </Link>
+              <Link href="/signup" className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-all">
+                Sign up
+              </Link>
+            </div>
+          </div>
+        </header>
+      )}
+
+      {/* Back button for logged-in users */}
+      {session && view === 'landing' && (
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-sm text-warm-600 hover:text-primary-600 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+          </Link>
+        </div>
+      )}
+
       {view === 'landing' && <LandingView onStart={() => setView('playing')} baseElo={baseElo} isLoggedIn={isLoggedIn} />}
       {view === 'playing' && <GameView onFinish={() => setView('result')} baseElo={baseElo} />}
       {view === 'result' && <ResultView onReplay={() => setView('playing')} isLoggedIn={isLoggedIn} setBaseElo={setBaseElo} />}
       <Footer />
-    </>
+    </div>
   );
 }
 
@@ -199,19 +227,14 @@ function LandingView({ onStart, baseElo, isLoggedIn }: { onStart: () => void; ba
 
             {/* CTA */}
             <div className="flex flex-col sm:flex-row items-start gap-4">
-            <button
-              onClick={handleStart}
-              className="group inline-flex items-center gap-3 px-10 py-5 bg-primary-900 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-primary-800 transition-all hover:-translate-y-0.5"
-            >
-              <Zap className="w-6 h-6 text-yellow-400" />
-              Start Today&apos;s Challenge
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            {isLoggedIn && (
-              <Link href="/dashboard" className="inline-flex items-center gap-2 px-6 py-5 text-primary-700 font-medium hover:text-primary-900 transition-colors">
-                ← Back to Dashboard
-              </Link>
-            )}
+              <button
+                onClick={handleStart}
+                className="group inline-flex items-center gap-3 px-10 py-5 bg-primary-900 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-primary-800 transition-all hover:-translate-y-0.5"
+              >
+                <Zap className="w-6 h-6 text-yellow-400" />
+                Start Today&apos;s Challenge
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
 
             <p className="text-sm text-warm-500 mt-4">Free to play · No sign-up required</p>
@@ -333,14 +356,7 @@ function GameView({ onFinish, baseElo }: { onFinish: () => void; baseElo: number
 
   const handleNext = () => {
     if (gs.currentQuestion >= QUESTIONS.length - 1) {
-      // Store result in sessionStorage for result view
-      const correctCount = gs.answers.filter((a, i) =>
-        i < gs.currentQuestion ? a === QUESTIONS[i].correctAnswer : selected === QUESTIONS[i].correctAnswer
-      ).length + (selected === q.correctAnswer ? 0 : 0);
-
       const finalAnswers = [...gs.answers];
-      // Already set in handleAnswer
-
       const cc = finalAnswers.filter((a, i) => a === QUESTIONS[i].correctAnswer).length;
       const acc = (cc / QUESTIONS.length) * 100;
       const avgT = gs.timeSpent.reduce((a, b) => a + b, 0) / QUESTIONS.length;
@@ -488,7 +504,7 @@ function ResultView({ onReplay, isLoggedIn, setBaseElo }: { onReplay: () => void
     const a = sessionStorage.getItem('vocab-answers');
     if (r) {
       const parsed = JSON.parse(r) as Result;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       setResult(parsed);
       // Save ELO to DB if logged in
       if (isLoggedIn && parsed.eloChange !== undefined) {

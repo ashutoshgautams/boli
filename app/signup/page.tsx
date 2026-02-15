@@ -87,15 +87,21 @@ export default function SignupPage() {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setIsLoading(true);
-    try {
-      await signIn('google', { callbackUrl: '/dashboard' });
-    } catch {
-      setError('Failed to sign up with Google.');
-      setIsLoading(false);
-    }
-  };
+const handleGoogleSignup = async () => {
+  setIsLoading(true);
+  
+  // Store phone number before redirecting
+  if (phoneNumber && step === 2) {
+    localStorage.setItem('pendingPhone', phoneNumber.replace(/\D/g, ''));
+  }
+  
+  try {
+    await signIn('google', { callbackUrl: '/dashboard' });
+  } catch {
+    setError('Failed to sign up with Google.');
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="auth-container">

@@ -17,6 +17,7 @@ const navigation = [
     children: [
       { name: 'Courses', href: '/dashboard/courses', icon: BookOpen },
       { name: 'Materials', href: '/dashboard/materials', icon: FileText },
+      { name: 'Vocabulary Challenge', href: '/dashboard/vocabulary', icon: Target },
     ],
   },
   {

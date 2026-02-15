@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import OnboardingPhone from './onboarding-phone/page';
+
+
 import {
   BookOpen, MessageSquare, Users, Play, ArrowRight,
   Brain, Zap, Clock, Trophy, Target, FileText, Calendar,
@@ -19,6 +22,7 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <OnboardingPhone />
       {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-2xl lg:text-3xl font-bold text-primary-900 mb-1">
@@ -115,7 +119,7 @@ export default function DashboardPage() {
 
           {/* Book Counselling */}
           <div className="bg-gradient-to-br from-primary-700 to-primary-800 rounded-xl p-5 text-white">
-            <h3 className="font-bold mb-2">Free Career Counselling</h3>
+            <h3 className="font-bold mb-2" style={{ color: 'white' }}>Free Career Counselling</h3>
             <p className="text-sm text-white/80 mb-1">
               <span className="line-through text-white/50">₹999</span>{' '}
               <span className="text-yellow-300 font-bold">FREE</span>
