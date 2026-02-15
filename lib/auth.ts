@@ -60,43 +60,44 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        const db = await getDb();
-        const existingUser = await db.collection('users').findOne({
-          email: user.email?.toLowerCase(),
-        });
+  if (account?.provider === 'google') {
+    const db = await getDb();
+    const existingUser = await db.collection('users').findOne({
+      email: user.email?.toLowerCase(),
+    });
 
-        if (existingUser) {
-          // Link Google to existing account if not already linked
-          if (!existingUser.googleId) {
-            await db.collection('users').updateOne(
-              { _id: existingUser._id },
-              {
-                $set: {
-                  googleId: account.providerAccountId,
-                  image: user.image,
-                  updatedAt: new Date(),
-                },
-              }
-            );
+    if (existingUser) {
+      if (!existingUser.googleId) {
+        await db.collection('users').updateOne(
+          { _id: existingUser._id },
+          {
+            $set: {
+              googleId: account.providerAccountId,
+              image: user.image,
+              updatedAt: new Date(),
+            },
           }
-        } else {
-          // Create new user from Google
-          await db.collection('users').insertOne({
-            email: user.email?.toLowerCase(),
-            name: user.name,
-            image: user.image,
-            googleId: account.providerAccountId,
-            phone: null,
-            level: 'Beginner',
-            plan: 'free',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          });
-        }
+        );
       }
-      return true;
-    },
+    } else {
+      // Get pending phone from localStorage (will be available in client)
+      // For server-side, we'll update it via a separate API call
+      await db.collection('users').insertOne({
+        email: user.email?.toLowerCase(),
+        name: user.name,
+        image: user.image,
+        googleId: account.providerAccountId,
+        phone: null, // Will be updated via API
+        level: 'Beginner',
+        plan: 'free',
+        vocabElo: 800,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+  }
+  return true;
+},
 
     async jwt({ token, user, trigger, session }: { token: JWT; user?: User; trigger?: string; session?: Session }) {
       if (user) {
